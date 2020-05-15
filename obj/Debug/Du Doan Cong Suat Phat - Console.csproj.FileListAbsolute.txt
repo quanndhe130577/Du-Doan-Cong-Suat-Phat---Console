@@ -1,0 +1,6 @@
+C:\Users\quanh\Desktop\Dự Đoán Công Suất Phát Nhà Máy Điện Mặt Trời\Du Doan Cong Suat Phat - Console\bin\Debug\Du Doan Cong Suat Phat - Console.exe
+C:\Users\quanh\Desktop\Dự Đoán Công Suất Phát Nhà Máy Điện Mặt Trời\Du Doan Cong Suat Phat - Console\bin\Debug\Du Doan Cong Suat Phat - Console.pdb
+C:\Users\quanh\Desktop\Dự Đoán Công Suất Phát Nhà Máy Điện Mặt Trời\Du Doan Cong Suat Phat - Console\obj\Debug\Du Doan Cong Suat Phat - Console.csprojAssemblyReference.cache
+C:\Users\quanh\Desktop\Dự Đoán Công Suất Phát Nhà Máy Điện Mặt Trời\Du Doan Cong Suat Phat - Console\obj\Debug\Du Doan Cong Suat Phat - Console.csproj.CoreCompileInputs.cache
+C:\Users\quanh\Desktop\Dự Đoán Công Suất Phát Nhà Máy Điện Mặt Trời\Du Doan Cong Suat Phat - Console\obj\Debug\Du Doan Cong Suat Phat - Console.exe
+C:\Users\quanh\Desktop\Dự Đoán Công Suất Phát Nhà Máy Điện Mặt Trời\Du Doan Cong Suat Phat - Console\obj\Debug\Du Doan Cong Suat Phat - Console.pdb
