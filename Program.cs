@@ -13,7 +13,7 @@ namespace Du_Doan_Cong_Suat_Phat___Console
         static void Main(string[] args)
         {
             HttpWebRequest WebReq = (HttpWebRequest)WebRequest.Create
-        (string.Format("https://www.nldc.evn.vn/Renewable/Scada/GetScadaNhaMay?start=20200514000000&end=20200515000000&idNhaMay=362"));
+        (string.Format("https://www.nldc.evn.vn/Renewable/Scada/GetScadaNhaMay?start=20200516000000&end=20200517000000&idNhaMay=362"));
 
             WebReq.Method = "GET";
 
@@ -31,10 +31,16 @@ namespace Du_Doan_Cong_Suat_Phat___Console
             SoLieu obj = jss.Deserialize<SoLieu>(str);
             Console.WriteLine("sucess : " + obj.success);
 
-            
+            //set capacity_Max
+            double capacity_MAX = obj.data[0].capacity / 0.9;
 
             for (int i = 0; i < obj.data.Count; i++)
             {
+                if(capacity_MAX < obj.data[i].capacity / 0.9)
+                {
+                    capacity_MAX = obj.data[i].capacity / 0.9;
+                }
+
                 if (obj.data[i].capacity == 0 || obj.data[i].ghi == 0)
                 {
                     obj.data.RemoveAt(i--);
@@ -115,16 +121,7 @@ namespace Du_Doan_Cong_Suat_Phat___Console
                 double dudoan = obj.data[i].CapacityDuDoan(rs);
                 double thucte = obj.data[i].capacity;
                 saisoMSE += Math.Pow((dudoan-thucte), 2);
-                
-                if(thucte != 0)
-                {
-                    saisoMAPE += Math.Abs((dudoan - thucte) / thucte);
-                }
-                else
-                {
-                    numberTestMAPE--;
-                }
-                
+                saisoMAPE += Math.Abs((dudoan - thucte) / capacity_MAX);
                 saisoMAE += Math.Abs(dudoan - thucte);
             }
             saisoMSE /= numberTest;
@@ -133,6 +130,7 @@ namespace Du_Doan_Cong_Suat_Phat___Console
             saisoRMSE = Math.Sqrt(saisoMSE);
             Console.WriteLine("Sai so du doan theo MAE : " + saisoMAE );
             Console.WriteLine("Sai so du doan theo MSE : " + saisoMSE );
+            Console.WriteLine("Cong Suat MAX : " + capacity_MAX);
             Console.WriteLine("Sai so du doan theo MAPE : " + saisoMAPE *100 + " %");
             Console.WriteLine("Sai so du doan theo RMSE : " + saisoRMSE);
             Console.ReadLine();
