@@ -26,6 +26,12 @@ namespace Du_Doan_Cong_Suat_Phat___Console
             return "time : " + time + ", capacity : " + capacity + " , ghi : " + ghi + " , envtemp : " + envtemp;
         }
 
+        public double CapacityDuDoan(MaTran rs)
+        {
+            double dudoan = MaTran.TichVoHuong2Vector(new double[3] { 1, ghi, envtemp}, rs.GetCol(0), 3);
+            Console.WriteLine("Du doan ( Time : "+ time+" ,     ghi = " + ghi + " , temp = " + envtemp + " ): " + dudoan + "\nThuc Te : " + capacity );
+            return dudoan;
+        }
     }
 
     /*  static class SoLieuList

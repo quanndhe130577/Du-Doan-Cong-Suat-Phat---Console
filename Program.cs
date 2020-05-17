@@ -13,37 +13,41 @@ namespace Du_Doan_Cong_Suat_Phat___Console
         static void Main(string[] args)
         {
             HttpWebRequest WebReq = (HttpWebRequest)WebRequest.Create
-        (string.Format("https://www.nldc.evn.vn/Renewable/Scada/GetScadaNhaMay?start=20200514000000&end=20200514170000&idNhaMay=362"));
+        (string.Format("https://www.nldc.evn.vn/Renewable/Scada/GetScadaNhaMay?start=20200514000000&end=20200515000000&idNhaMay=362"));
 
             WebReq.Method = "GET";
 
             HttpWebResponse WebResp = (HttpWebResponse)WebReq.GetResponse();
-/*            if (WebResp.StatusCode.ToString() != "200")
-            {
-                Console.WriteLine("Can't get data !!!");
-            }*/
+            /*            if (WebResp.StatusCode.ToString() != "200")
+                        {
+                            Console.WriteLine("Can't get data !!!");
+                        }*/
 
             Stream json = WebResp.GetResponseStream();
             StreamReader json_str = new StreamReader(json);
             string str = json_str.ReadToEnd();
-            
+
             JavaScriptSerializer jss = new JavaScriptSerializer();
             SoLieu obj = jss.Deserialize<SoLieu>(str);
             Console.WriteLine("sucess : " + obj.success);
 
-            for(int i = 0; i < obj.data.Count; i++)
+            
+
+            for (int i = 0; i < obj.data.Count; i++)
             {
-                /*                if (obj.data[i].capacity == 0 || obj.data[i].ghi == 0)
-                                {
-                                    obj.data.RemoveAt(i--);
-                                }
-                                else
-                                {
-                                    Console.WriteLine(obj.data[i]);
-                                }*/
-                Console.WriteLine(obj.data[i]);
+                if (obj.data[i].capacity == 0 || obj.data[i].ghi == 0)
+                {
+                    obj.data.RemoveAt(i--);
+                }
+                else
+                {
+                    Console.WriteLine(obj.data[i]);
+                }
+              //  Console.WriteLine(obj.data[i]);
             }
             Console.WriteLine("message : " + obj.message);
+            int numberTraining = obj.data.Count / 10 * 8;
+            int numberTest = obj.data.Count - numberTraining;
 
             int number = obj.data.Count;
             MaTran X = new MaTran(number, 3);
@@ -78,7 +82,7 @@ namespace Du_Doan_Cong_Suat_Phat___Console
 
             MaTran XChuyenVi = X.matrixChuyenVi();
 
-            MaTran Tich2MaTran_1 = MaTran.Tich2MaTran(XChuyenVi, X );
+            MaTran Tich2MaTran_1 = MaTran.Tich2MaTran(XChuyenVi, X);
             MaTran Tich2MaTran_2 = MaTran.Tich2MaTran(XChuyenVi, Y);
             MaTran NghichDao = Tich2MaTran_1.MaTranNghichDao();
             MaTran rs = MaTran.Tich2MaTran(NghichDao, Tich2MaTran_2);
@@ -97,25 +101,41 @@ namespace Du_Doan_Cong_Suat_Phat___Console
             Console.WriteLine("Nghich dao : : \n" + NghichDao.ToString());
 
             Console.WriteLine("Ket qua : : \n" + rs.ToString());*/
-            Console.WriteLine("Number of data traing :" + obj.data.Count);
+            Console.WriteLine("Number of data traing :" + numberTraining);
+            Console.WriteLine("Number of data test :" + numberTest);
 
-            DuDoan(194.0, 33.0, rs);
-            //Console.WriteLine(X.MaTranPhuHop3x3()); 
-              Console.ReadLine();
-        }
-        
-        public static void DuDoan(double ghi, double temp, MaTran rs)
-        {
-            if(ghi == 0)
+            double saisoMAE = 0;
+            double saisoMSE = 0;
+            double saisoRMSE = 0;
+            double saisoMAPE = 0;
+
+            int numberTestMAPE = numberTest;
+            for(int i = numberTraining; i < obj.data.Count; i++)
             {
-                Console.WriteLine("Du doan : 0");
-                return;
+                double dudoan = obj.data[i].CapacityDuDoan(rs);
+                double thucte = obj.data[i].capacity;
+                saisoMSE += Math.Pow((dudoan-thucte), 2);
+                
+                if(thucte != 0)
+                {
+                    saisoMAPE += Math.Abs((dudoan - thucte) / thucte);
+                }
+                else
+                {
+                    numberTestMAPE--;
+                }
+                
+                saisoMAE += Math.Abs(dudoan - thucte);
             }
-            double[] test = new double[3];
-            test[0] = 1;
-            test[1] = ghi;
-            test[2] = temp;
-            Console.WriteLine("Du doan ( ghi = " + ghi + " , temp = " + temp + " ): " + MaTran.TichVoHuong2Vector(test, rs.GetCol(0), 3));
+            saisoMSE /= numberTest;
+            saisoMAE /= numberTest;
+            saisoMAPE /= numberTestMAPE ;
+            saisoRMSE = Math.Sqrt(saisoMSE);
+            Console.WriteLine("Sai so du doan theo MAE : " + saisoMAE );
+            Console.WriteLine("Sai so du doan theo MSE : " + saisoMSE );
+            Console.WriteLine("Sai so du doan theo MAPE : " + saisoMAPE *100 + " %");
+            Console.WriteLine("Sai so du doan theo RMSE : " + saisoRMSE);
+            Console.ReadLine();
         }
     }
 }

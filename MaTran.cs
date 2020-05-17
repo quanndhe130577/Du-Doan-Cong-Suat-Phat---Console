@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Du_Doan_Cong_Suat_Phat___Console
 {
-    class MaTran
+    public class MaTran
     {
         public int soDong { get; set; }
         public int soCot { get; set; }
