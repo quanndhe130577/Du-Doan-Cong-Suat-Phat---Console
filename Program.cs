@@ -51,6 +51,7 @@ namespace Du_Doan_Cong_Suat_Phat___Console
                 }
               //  Console.WriteLine(obj.data[i]);
             }
+
             Console.WriteLine("message : " + obj.message);
             int numberTraining = obj.data.Count / 10 * 8;
             int numberTest = obj.data.Count - numberTraining;
@@ -116,7 +117,7 @@ namespace Du_Doan_Cong_Suat_Phat___Console
             double saisoMAPE = 0;
 
             int numberTestMAPE = numberTest;
-            for(int i = numberTraining; i < obj.data.Count; i++)
+            for(int i = numberTraining ; i < obj.data.Count; i++)
             {
                 double dudoan = obj.data[i].CapacityDuDoan(rs);
                 double thucte = obj.data[i].capacity;
